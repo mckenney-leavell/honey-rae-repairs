@@ -2,7 +2,8 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getEmployeeById } from "../../services/employeeService";
 // import { getStaffUsers } from "../../services/userService"
-import { getAllTickets } from "../../services/ticketService";
+// import { getAllTickets } from "../../services/ticketService";
+import { getEmployeeServiceTickets } from "../../services/ticketService";
 
 export const EmployeeDetails = () => {
   const [employee, setEmployee] = useState({});
@@ -17,14 +18,14 @@ export const EmployeeDetails = () => {
   }, [employeeId]);
 
   useEffect(() => {
-    getAllTickets().then((ticketsArray) => {
-        ticketsArray.map((ticket) => {
-            if (ticket.employeeTickets.employeeId === employeeId) {
-                setTicketCount(ticketCount + 1)
-            }
+    getEmployeeServiceTickets(employeeId).then((data) => {
+        data.map((dataObj) => {
+            console.log(dataObj.employeeTickets.length)
+            setTicketCount(dataObj.employeeTickets.length)
         })
     })
   })
+
 
   return (
     <section className="employee">
