@@ -1,12 +1,12 @@
-export const FilterBar = ({getShowEmergency, setSearchTerm}) => {
+export const FilterBar = ({setShowEmergencyOnly, setSearchTerm}) => {
 
     return (
     <div className="filter-bar">
     <button className="filter-btn btn-primary" onClick={() => {
-        getShowEmergency(true)
+        setShowEmergencyOnly(true)
     }}>Emergency</button>
     <button className="filter-btn btn-info" onClick={() => {
-        getShowEmergency(false)
+        setShowEmergencyOnly(false)
     }}>Show All</button>
     <input
         onChange={(event) => {setSearchTerm(event.target.value)}}
