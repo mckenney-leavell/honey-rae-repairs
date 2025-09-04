@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllEmployees } from "../../services/employeeService";
-import { assignTicket } from "../../services/ticketService";
-import { updateTicket } from "../../services/ticketService";
+import { assignTicket, updateTicket, deleteTicket } from "../../services/ticketService";
 // import { getAllTickets } from "../../services/ticketService";
 
 export const Ticket = ({ ticket, currentUser, getAndSetTickets }) => {
@@ -49,6 +48,12 @@ export const Ticket = ({ ticket, currentUser, getAndSetTickets }) => {
         })
     }
 
+    const handleDelete = () => {
+        deleteTicket(ticket.id).then(() => {
+            getAndSetTickets()
+        })
+    }
+
     return (
         <section className="ticket">
         <header className="ticket-info">#{ticket.id}</header>
@@ -72,6 +77,13 @@ export const Ticket = ({ ticket, currentUser, getAndSetTickets }) => {
 
                 {/* {if the logged in user is the assigned employee for the ticket and there is no date completed, then a button to close the ticket should display} */}
                 {assignedEmployee?.userId === currentUser.id && !ticket.dateCompleted ? <button className="btn btn-warning" onClick={handleClose}>Close</button> : ("")}
+
+                {!currentUser.isStaff ? 
+                    (<button 
+                        className="btn btn-warning"
+                        onClick={handleDelete}
+                        >Delete</button>)
+                    : ("")}
             </div>
         </footer>
         </section>

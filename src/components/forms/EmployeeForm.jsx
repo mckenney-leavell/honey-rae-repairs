@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import "./Form.css"
-import { getEmployeeById } from "../../services/employeeService"
+import { getEmployeeById, updateEmployee } from "../../services/employeeService"
+import { useNavigate } from "react-router-dom"
 
 export const EmployeeForm = ({ currentUser }) => {
     const [employee, setEmployee] = useState({})
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         getEmployeeById(currentUser.id).then((data) => {
@@ -12,24 +15,63 @@ export const EmployeeForm = ({ currentUser }) => {
         })
     }, [currentUser])
 
+    const handleInputChange = (event) => {
+        const stateCopy = { ...employee }
+        stateCopy[event.target.name] = event.target.value
+        setEmployee(stateCopy)
+    }
+
+    const handleSave = (event) => {
+        event.preventDefault()
+        console.log("clicked")
+
+        const editedEmployee = {
+            id: employee.id,
+            specialty: employee.specialty,
+            rate: employee.rate,
+            userId: employee.userId,
+        }
+
+        updateEmployee(editedEmployee).then(() => {
+            navigate(`/employees/${currentUser.id}`)
+        })
+    }
+
+
     return (
         <form className="profile">
             <h2>Update Profile</h2>
             <fieldset>
                 <div className="form-group">
                     <label>Specialty:</label>
-                    <input type="text" required className="form-control" />
+                    <input 
+                        type="text" 
+                        name="specialty"
+                        value={employee.specialty || ""} 
+                        onChange={handleInputChange}
+                        required 
+                        className="form-control" 
+                    />
                 </div>
             </fieldset>
             <fieldset>
                 <div className="form-group">
                     <label>Hourly Rate:</label>
-                    <input type="number" required className="form-control" />
+                    <input 
+                        type="number" 
+                        name="rate"
+                        value={employee.rate ? employee.rate : 0}
+                        required 
+                        onChange={handleInputChange}
+                        className="form-control" 
+                    />
                 </div>
             </fieldset> 
             <fieldset>
                 <div className="form-group">
-                    <button className="form-btn btn-primary">Save Profile</button>
+                    <button className="form-btn btn-primary" onClick={handleSave}>
+                        Save Profile
+                    </button>
                 </div>
             </fieldset>     
         </form>
